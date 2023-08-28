@@ -1,0 +1,13 @@
+fuse_l1 = 2.8
+fuse_l2 = 0.1
+fuse_l3 = 5
+fuse_w = 1
+fuse_h = 1
+wing_l = 1.5
+wing_w = 7
+tail_l = 1
+tail_h = 1.5
+tailwing_w = 3.3
+tailwing_l = 0.75
+prop_l = 2
+prop_w = 0.5
