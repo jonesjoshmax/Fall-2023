@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d.art3d import Line3DCollection
 from matplotlib.animation import FuncAnimation
 import rotations as r
-import a1_data as p
+import A1_Data as p
 
 # Constants
 runtime = 2
@@ -36,24 +36,26 @@ def update_frame(frame):
     ax.cla()
     from math import pi
     import numpy as np
+    if frame == 0:
+        plt.pause(10)
     t = frame * ts
     if frame < f_count / 6:
         angle = pi / 4 * np.array([np.sin(t / freq), 0, 0])
     elif f_count / 6 <= frame < 1 / 3 * f_count:
         angle = pi / 4 * np.array([0, np.sin(t / freq), 0])
-    elif f_count * 1 / 3 <= frame < 1 / 2 * f_count:
+    elif f_count * 1 / 3 <= frame < f_count / 2:
         angle = pi / 4 * np.array([0, 0, np.sin(t / freq)])
     elif f_count * 1 / 2 <= frame < 2 / 3 * f_count:
         temp = p.points
-        temp[:, 0] += np.cos(t / freq)
+        temp[:, 0] += .5 * np.cos(t / freq)
         rotated_points = temp
     elif f_count * 2 / 3 <= frame < 5 / 6 * f_count:
         temp = p.points
-        temp[:, 1] += np.cos(t / freq)
+        temp[:, 1] += .5 * np.cos(t / freq)
         rotated_points = temp
     else:
         temp = p.points
-        temp[:, 2] += np.cos(t / freq)
+        temp[:, 2] += .5 * np.cos(t / freq)
         rotated_points = temp
     if frame < f_count / 2:
         rotation_matrix = r.Euler2Rotation(angle[0], angle[1], angle[2])
