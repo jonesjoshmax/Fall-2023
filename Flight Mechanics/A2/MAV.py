@@ -26,7 +26,7 @@ class MAV:
         self.jz = p.jz
         self.jxz = p.jxz
 
-        # SETUP SCRIPT FOR GAMMA EQUATIONS
+        # GAMMA EQUATIONS
         self.gamma = zeros(9)
         self.gamma[0] = self.jx * self.jz - pow(self.jxz, 2)
         self.gamma[1] = self.jxz * (self.jx - self.jy + self.jz) / self.gamma[0]
