@@ -1,26 +1,24 @@
 from numpy import zeros
 from numpy import arange
-from numpy import pi
 
 # MODEL SETTING
-model = 'simple.stl'
+model = 'f22.stl'
+
+# GRAPHING SETTINGS
+g_lim = 5
+scale = 0.05
 
 # TIME SETTINGS
 t0 = 0
-t1 = 2 * pi
+t1 = 30
 ts = 0.01
 t_array = arange(t0, t1 + ts, ts)
-freq1 = 6
-freq2 = 6
-amp1 = 2000
-amp2 = 25
 
 # INERTIAL PARAMETERS
 jx = 0.824
 jy = 1.135
 jz = 1.759
-# jxz = 0.120
-jxz = 0
+jxz = 0.120
 g = 9.806650
 mass = 13.5
 
@@ -31,12 +29,14 @@ ang = zeros((3, 1))
 pDir = zeros((3, 1))
 # MATRIX CONTAINING UVW, [[U], [V], [W]]
 uvw = zeros((3, 1))
+# MATRIX CONTAINING PQR, [[P], [Q], [R]]
+pqr = zeros((3, 1))
 # MATRIX CONTAINING FORCES, [[FX], [FY], [FZ]]
 f = zeros((3, 1))
 # EXTERNAL MOMENTS [[L], [M], [N]]
 lmn = zeros((3, 1))
-# MATRIX CONTAINING PQR, [[P], [Q], [R]]
-pqr = zeros((3, 1))
+# DEFLECTIONS [[Da], [De], [Dr], [Dt]]
+defL = zeros((4, 1))
 
 # AERODYNAMIC PARAMETERS
 S = 0.55

@@ -18,6 +18,9 @@ class Visualizer:
         self.ang = None
         self.pqr = None
         self.verts = None
+        self.defP = None
+        self.thr = None
+        self.g_lim = p.g_lim
 
         # TIME INITIALIZATION
         self.t0 = p.t0
@@ -33,6 +36,7 @@ class Visualizer:
         self.pqrData = p.pqr
         self.fData = p.f
         self.lmnData = p.lmn
+        self.defLData = p.defL
 
     def initialization(self):
         self.t0 = 0
@@ -41,21 +45,40 @@ class Visualizer:
 
         self.fig = plt.figure()
         self.plane = self.fig.add_subplot(1, 3, 1, projection='3d')
-        self.force = self.fig.add_subplot(2, 3, 2)
-        self.moment = self.fig.add_subplot(2, 3, 5)
-        self.ppp = self.fig.add_subplot(4, 3, 3)
-        self.uvw = self.fig.add_subplot(4, 3, 6)
-        self.ang = self.fig.add_subplot(4, 3, 9)
-        self.pqr = self.fig.add_subplot(4, 3, 12)
+        self.thr = self.fig.add_subplot(1, 12, 5)
+        self.defP = self.fig.add_subplot(3, 4, 3)
+        self.force = self.fig.add_subplot(3, 4, 7)
+        self.moment = self.fig.add_subplot(3, 4, 11)
+        self.ppp = self.fig.add_subplot(4, 4, 4)
+        self.uvw = self.fig.add_subplot(4, 4, 8)
+        self.ang = self.fig.add_subplot(4, 4, 12)
+        self.pqr = self.fig.add_subplot(4, 4, 16)
         self.fig.subplots_adjust(right=.975, top=.95, left=.025, bottom=.05, hspace=.5)
 
         # PLANE SUBPLOT
         self.plane.set_xlabel(r'X (m)')
         self.plane.set_ylabel(r'Y (m)')
         self.plane.set_zlabel(r'Z (m)')
-        self.plane.set_xlim([-100, 100])
-        self.plane.set_ylim([-100, 100])
-        self.plane.set_zlim([-100, 100])
+        self.plane.set_xlim([-self.g_lim, self.g_lim])
+        self.plane.set_ylim([-self.g_lim, self.g_lim])
+        self.plane.set_zlim([-self.g_lim, self.g_lim])
+
+        # THROTTLE SUBPLOT
+        self.thr.set_title('Throttle')
+        self.thr.set_ylabel('% / 100')
+        self.thr.bar(0, self.defLData[3, 0], width=0.5)
+        self.thr.set_ylim(0, 1)
+        self.thr.set_xticks([])
+
+        # DEFLECTION SUBPLOT
+        self.defP.set_title('Deflection')
+        self.defP.set_xlabel('Time (s)')
+        self.defP.set_ylabel('Deflection (Deg)')
+        self.defP.plot(self.t_array[0], self.defLData[0, 0], label='a', color='r')
+        self.defP.plot(self.t_array[0], self.defLData[1, 0], label='e', color='g')
+        self.defP.plot(self.t_array[0], self.defLData[2, 0], label='r', color='b')
+        self.defP.legend(loc='upper right')
+        self.defP.grid(True)
 
         # FORCE SUBPLOT
         self.force.set_title('Force')
@@ -117,7 +140,9 @@ class Visualizer:
         self.pqr.legend(loc='upper right')
         self.pqr.grid(True)
 
-    def update(self, verts, data, f, lmn):
+        plt.pause(10)
+
+    def update(self, verts, data, f, lmn, defLData):
         self.verts = verts
         self.t += 1
 
@@ -128,11 +153,31 @@ class Visualizer:
         self.plane.set_zlabel(r'Z (m)')
         faces = np.arange(0, len(self.verts)).reshape(-1, 3)
         poly3d = Poly3DCollection([self.verts[polygon] for polygon in faces], facecolors='red', linewidths=.25,
-                                  edgecolors='black')
+                                  edgecolors='black', alpha=0.75)
         self.plane.add_collection3d(poly3d)
-        self.plane.set_xlim([-100, 100])
-        self.plane.set_ylim([-100, 100])
-        self.plane.set_zlim([-100, 100])
+        self.plane.set_xlim([-self.g_lim + data[0, 0], self.g_lim + data[0, 0]])
+        self.plane.set_ylim([-self.g_lim + data[1, 0], self.g_lim + data[1, 0]])
+        self.plane.set_zlim([-self.g_lim + data[2, 0], self.g_lim + data[2, 0]])
+
+        # THROTTLE SUBPLOT
+        self.defLData = np.append(self.defLData, defLData, 1)
+        self.thr.cla()
+        self.thr.set_title('Throttle')
+        self.thr.set_ylabel('% / 100')
+        self.thr.bar(0, self.defLData[3, -1], width=0.5)
+        self.thr.set_ylim(0, 1)
+        self.thr.set_xticks([])
+
+        # DEFLECTION SUBPLOT
+        self.defP.cla()
+        self.defP.set_title('Deflection')
+        self.defP.set_xlabel('Time (s)')
+        self.defP.set_ylabel('Deflection (Deg)')
+        self.defP.plot(self.t_array[:self.t], np.rad2deg(self.defLData[0]), label='a', color='r')
+        self.defP.plot(self.t_array[:self.t], np.rad2deg(self.defLData[1]), label='e', color='g')
+        self.defP.plot(self.t_array[:self.t], np.rad2deg(self.defLData[2]), label='r', color='b')
+        self.defP.legend(loc='upper right')
+        self.defP.grid(True)
 
         # FORCE SUBPLOT
         self.force.cla()

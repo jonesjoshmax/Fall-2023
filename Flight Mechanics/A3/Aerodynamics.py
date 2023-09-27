@@ -1,6 +1,5 @@
 import numpy as np
 from Parameters import *
-from Wind import wind
 
 
 class Aerodynamics:
@@ -29,10 +28,19 @@ class Aerodynamics:
         self.wu = None
         self.wv = None
         self.ww = None
+        self.sig = None
 
-    def cla(self): return cl0 + cla * self.alpha
+    def sigma(self):
+        a = 1 + np.exp(-mass * (self.alpha - alpha0)) + np.exp(mass * (self.alpha + alpha0))
+        b = (1 + np.exp(-mass * (self.alpha - alpha0))) * (1 + np.exp(mass * (self.alpha + alpha0)))
+        self.sig = a / b
 
-    def cda(self): return cd0 + cda * self.alpha
+    def cla(self):
+        return (1 - self.sig) * (cl0 + cla * self.alpha) + self.sig * (2 * np.sign(self.alpha) * np.sin(self.alpha) ** 2
+                                                                       * np.cos(self.alpha))
+
+    def cda(self):
+        return cdp + (cl0 + cda * self.alpha) ** 2 / (np.pi * e * AR)
 
     def cxa(self): return -self.cda() * np.cos(self.alpha) + self.cla() * np.sin(self.alpha)
 
@@ -46,15 +54,12 @@ class Aerodynamics:
 
     def czDe(self): return -cdDe * np.sin(self.alpha) - clDe * np.cos(self.alpha)
 
-    def update(self, states, data, ts):
+    def update(self, states, data, vab):
         self.Da, self.De, self.Dr, self.Dt = data.flatten()
         self.pn, self.pe, self.pd, self.u, self.v, self.w, self.ph, self.th, self.ps, self.p, self.q, self.r \
             = states.flatten()
-        self.wind = wind(self.ph, self.th, self.ps, self.Va, ts)
-        self.wu, self.wv, self.ww = self.wind.flatten()
-        self.Va = np.sqrt(((self.u - self.wu) ** 2) + ((self.v - self.wv) ** 2) + ((self.w - self.ww) ** 2))
-        self.alpha = np.arctan(self.wu / self.ww)
-        self.beta = np.arcsin(self.wv / self.Va)
+        self.Va, self.alpha, self.beta = vab.flatten()
+        self.sigma()
 
     def grav(self):
         grav = np.array([[-mass * g * np.sin(self.th)],
@@ -78,7 +83,7 @@ class Aerodynamics:
         return prop_f
 
     def pitch(self):
-        a = rho * (self.Va ** 2) * S
+        a = rho * (self.Va ** 2) * S / 2
         pitch = a * np.array([[b * (cL0 + cLb * self.beta + cLp * (b * self.p) / (2 * self.Va) +
                                     cLr * (b * self.r) / (2 * self.Va) + cLDa * self.Da + cLDr * self.Dr)],
                               [c * (cm0 + cma * self.alpha + cmq * (c * self.q) / (2 * self.Va) + cmDe * self.De)],
@@ -92,10 +97,10 @@ class Aerodynamics:
                            [0]])
         return prop_t
 
-    def forces(self, states, data, ts):
-        self.update(states, data, ts)
+    def forces(self, states, data, vab):
+        self.update(states, data, vab)
         return self.aero() + self.grav() + self.prop_f()
 
-    def moments(self, states, data, ts):
-        self.update(states, data, ts)
+    def moments(self, states, data, vab):
+        self.update(states, data, vab)
         return self.pitch() + self.prop_t()

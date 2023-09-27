@@ -1,67 +1,55 @@
 import numpy as np
-import control
-from control.matlab import *
+from Rotations import Body2Inertial as B2I
+import control.matlab as mat
 
 
-def Body2Inertial(phi, theta, psi):
-    rbw = np.array([[np.cos(theta) * np.cos(psi),
-                     np.sin(phi) * np.sin(theta) * np.cos(psi) - np.cos(phi) * np.sin(psi),
-                     np.cos(phi) * np.sin(theta) * np.cos(psi)
-                     + np.sin(phi) * np.sin(psi)],
-                    [np.cos(theta) * np.sin(psi),
-                     np.sin(phi) * np.sin(theta) * np.sin(psi) + np.cos(phi) * np.cos(psi),
-                     np.cos(phi) * np.sin(theta) * np.sin(psi)
-                     - np.sin(phi) * np.cos(psi)],
-                    [-np.sin(theta), np.sin(phi) * np.cos(theta), np.cos(phi) * np.cos(theta)]])
-    return rbw
+class Wind:
 
+    def __init__(self):
+        self.Vs = np.array([[5], [3], [2]])
 
-def wind(phi, theta, psi, Va, dt):
-    # STEADY WIND INERTIAL FRAME
-    wn = 5
-    we = 3
-    wd = 2
+    @staticmethod
+    def drydenGust(Va, t):
+        # WHITE NOISE
+        su = np.random.normal(0, 1, 1)[0]
+        sv = np.random.normal(0, 1, 1)[0]
+        sw = np.random.normal(0, 1, 1)[0]
 
-    # GUST PARAMS
-    Lu = 200
-    Lv = 200
-    Lw = 50
-    sigma_u = 1.06  # 2.12
-    sigma_v = sigma_u
-    sigma_w = 0.7  # 1.4
-    au = sigma_u * np.sqrt(2 * Va / Lu)
-    av = sigma_v * np.sqrt(3 * Va / Lv)
-    aw = sigma_w * np.sqrt(3 * Va / Lw)
+        # DRYDEN PARAMETERS
+        Lu = 200
+        Lv = 200
+        Lw = 50
+        ou = ov = 1.06
+        ow = 0.7
 
-    # TRANSFER FUNCTIONS
-    num_u = [0, au]
-    den_u = [1, Va / Lu]
-    sys_u = tf(num_u, den_u)
-    num_v = [av, av * Va / (np.sqrt(3) * Lv)]
-    den_v = [1, 2 * Va / Lv, (Va / Lv) ** 2]
-    sys_v = tf(num_v, den_v)
-    num_w = [aw, aw * Va / (np.sqrt(3) * Lw)]
-    den_w = [1, 2 * Va / Lw, (Va / Lw) ** 2]
-    sys_w = tf(num_w, den_w)
+        # TFT COEFFS
+        c1 = ou * np.sqrt(2 * Va / Lu)
+        c2 = ov * np.sqrt(3 * Va / Lv)
+        c3 = ow * np.sqrt(3 * Va / Lw)
 
-    # SIMULATION RAND
-    T = [0, dt]
-    X0 = 0.0
-    white_noise_u = np.random.normal(0, 1, 1)
-    white_noise_v = np.random.normal(0, 1, 1)
-    white_noise_w = np.random.normal(0, 1, 1)
-    y_u, T, x_u = lsim(sys_u, white_noise_u[0], T, X0)
-    y_v, T, x_v = lsim(sys_v, white_noise_v[0], T, X0)
-    y_w, T, x_w = lsim(sys_w, white_noise_w[0], T, X0)
+        # TFTS
+        hu = mat.tf([0, c1], [1, Va / Lu])
+        hv = mat.tf([c2, c2 * Va / (np.sqrt(3) * Lv)], [1, 2 * Va / Lv, (Va / Lv) ** 2])
+        hw = mat.tf([c3, c3 * Va / (np.sqrt(3) * Lw)], [1, 2 * Va / Lw, (Va / Lw) ** 2])
 
-    # GUST COMPONENTS
-    wg_u = y_u[1]
-    wg_v = y_v[1]
-    wg_w = y_w[1]
-    Ws_v = np.array([wn, we, wd])  # WIND IN VEHICLE
-    R = Body2Inertial(phi, theta, psi)  # V2B ROTATION MATRIX
-    Ws_b = np.matmul(R.T, Ws_v.T).T  # WIND IN BODY
-    Wg_b = np.array([wg_u, wg_v, wg_w])
-    Vw = Wg_b + Ws_b
+        # GUSTS FROM TFTS
+        T = [0, t]
+        uwg, _, _ = mat.lsim(hu, su, T)
+        vwg, _, _ = mat.lsim(hv, sv, T)
+        wwg, _, _ = mat.lsim(hw, sw, T)
 
-    return Vw
+        return np.array([[uwg[1]], [vwg[1]], [wwg[1]]])
+
+    def update(self, state, Va, ts):
+        pn, pe, pd, u, v, w, ph, th, ps, p, q, r = state.flatten()
+        gusts = self.drydenGust(Va, ts)
+        wind0 = np.matmul(B2I(ph, th, ps), self.Vs) + gusts
+        Var = np.array([[u - wind0[0][0]],
+                        [v - wind0[1][0]],
+                        [w - wind0[2][0]]])
+        ur, vr, wr = Var.flatten()
+        Va = np.sqrt(ur ** 2 + vr ** 2 + wr ** 2)
+        alpha = np.arctan(wr / ur)
+        beta = np.arcsin(vr / Va)
+
+        return np.array([Va, alpha, beta])
