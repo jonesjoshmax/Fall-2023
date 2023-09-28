@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import matplotlib.patches as patches
 import numpy as np
 from msdParameters import *
 import matplotlib
@@ -9,6 +10,7 @@ class Visualizer:
     def __init__(self):
         self.fig = plt.figure()
         self.anim = self.fig.add_subplot(1, 2, 1)
+        self.rect = None
         self.f = self.fig.add_subplot(2, 2, 2)
         self.z = self.fig.add_subplot(2, 2, 4)
 
@@ -36,12 +38,22 @@ class Visualizer:
         self.z.grid(True)
 
         self.fig.tight_layout()
+        plt.pause(10)
 
     def update(self, state, f, r):
         self.tData = np.append(self.tData, self.tData[-1] + ts)
         self.fData = np.append(self.fData, f)
         self.zData = np.append(self.zData, state[0, 0])
         self.rData = np.append(self.rData, r)
+
+        # ANIMATION PLOT
+        self.anim.cla()
+        self.anim.axhline(y=-sq / 2, color='black', linewidth=4, zorder=3)
+        self.anim.plot([0, state[0, 0]], [0, 0], color='black', linestyle='--', zorder=1)
+        self.rect = patches.Rectangle((state[0, 0] - sq / 2, -sq / 2), sq, sq, facecolor='r', zorder=2)
+        self.anim.add_patch(self.rect)
+        self.anim.set_xlim(0, 15)
+        self.anim.set_ylim(-7.5, 7.5)
 
         # FORCE SUBPLOT
         self.f.cla()

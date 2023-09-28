@@ -10,8 +10,11 @@ kd = 2.4
 z_r = 2
 
 state0 = np.zeros((2, 1))
+state0[0, 0] = z_r
 
 t0 = 0
 tf = 120
 ts = 0.1
 tA = np.arange(t0, tf + ts, ts)
+
+sq = 2.5

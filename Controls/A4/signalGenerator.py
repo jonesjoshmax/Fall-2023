@@ -16,8 +16,7 @@ class signalGenerator:
 
     def sawtooth(self, t):
         tmp = t % (0.5 / self.frequency)
-        out = 4 * self.amplitude * self.frequency * tmp \
-              - self.amplitude + self.y_offset
+        out = 4 * self.amplitude * self.frequency * tmp - self.amplitude + self.y_offset
         return out
 
     def step(self, t):
