@@ -7,7 +7,7 @@ from vtolParameters import *
 dyn = Dynamics()
 con = Controller()
 vis = Visualizer()
-ref = signalGenerator(amplitude=h_r, frequency=.015)
+ref = signalGenerator(amplitude=h_r, frequency=.015, y_offset=h_r)
 
 t = t0
 state = dyn.state
