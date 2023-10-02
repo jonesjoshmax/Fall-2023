@@ -1,28 +1,30 @@
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import numpy as np
-from msdParameters import *
+from vtolParameters import *
 import matplotlib
 matplotlib.use('TkAgg')
 
 
 class Visualizer:
     def __init__(self):
+        # DATA ARRAY INITIALIZATION
+        self.tData = np.array([t0])
+        self.fData = np.array([0])
+        self.hData = np.array(state0[1, 0])
+        self.rData = np.array([h_r])
+
+        # FIGURE INITIALIZATION
         self.fig = plt.figure()
         self.anim = self.fig.add_subplot(1, 2, 1)
         self.rect = None
         self.f = self.fig.add_subplot(2, 2, 2)
-        self.z = self.fig.add_subplot(2, 2, 4)
-
-        self.tData = np.array([t0])
-        self.fData = np.array([0])
-        self.zData = np.array(state0[0, 0])
-        self.rData = np.array([z_r])
+        self.h = self.fig.add_subplot(2, 2, 4)
 
         # ANIMATION SUBPLOT SETUP
-        self.anim.set_title('Mass Spring Damper')
-        self.anim.set_yticks([])
+        self.anim.set_title('VTOL')
         self.anim.set_xlabel('Position (m)')
+        self.anim.set_ylabel('Position (m)')
 
         # FORCE SUBPLOT SETUP
         self.f.set_title('Controller Force Response')
@@ -31,29 +33,27 @@ class Visualizer:
         self.f.grid(True)
 
         # DISPLACEMENT SUBPLOT SETUP
-        self.z.set_title('MSD Displacement')
-        self.z.set_xlabel('Time (s)')
-        self.z.set_ylabel('Displacement (m)')
-        self.z.legend(loc='upper right')
-        self.z.grid(True)
+        self.h.set_title('VTOL Height')
+        self.h.set_xlabel('Time (s)')
+        self.h.set_ylabel('Height (m)')
+        self.h.legend(loc='upper right')
+        self.h.grid(True)
 
         self.fig.tight_layout()
-        plt.pause(10)
 
     def update(self, state, f, r):
         self.tData = np.append(self.tData, self.tData[-1] + ts)
         self.fData = np.append(self.fData, f)
-        self.zData = np.append(self.zData, state[0, 0])
+        self.hData = np.append(self.hData, state[1, 0])
         self.rData = np.append(self.rData, r)
 
         # ANIMATION PLOT
         self.anim.cla()
-        self.anim.axhline(y=-sq / 2, color='black', linewidth=4, zorder=3)
-        self.anim.plot([0, state[0, 0]], [0, 0], color='black', linestyle='--', zorder=1)
-        self.rect = patches.Rectangle((state[0, 0] - sq / 2, -sq / 2), sq, sq, facecolor='r', zorder=2)
+        self.anim.axhline(y=0, color='black', linewidth=1, zorder=3)
+        self.rect = patches.Rectangle((0 - cSize / 2, state[1, 0]), cSize, cSize, facecolor='r', zorder=2)
         self.anim.add_patch(self.rect)
-        self.anim.set_xlim(0, 15)
-        self.anim.set_ylim(-7.5, 7.5)
+        self.anim.set_xlim(-animLim / 2, animLim / 2)
+        self.anim.set_ylim(0, animLim)
 
         # FORCE SUBPLOT
         self.f.cla()
@@ -64,14 +64,14 @@ class Visualizer:
         self.f.plot(self.tData, self.fData, label='Force', color='r')
 
         # DISPLACEMENT SUBPLOT
-        self.z.cla()
-        self.z.set_title('MSD Displacement')
-        self.z.set_xlabel('Time (s)')
-        self.z.set_ylabel('Displacement (m)')
-        self.z.plot(self.tData, self.zData, label='Pos', color='r')
-        self.z.plot(self.tData, self.rData, label='Ref', color='r', linestyle='--')
-        self.z.legend(loc='upper right')
-        self.z.grid(True)
+        self.h.cla()
+        self.h.set_title('MSD Displacement')
+        self.h.set_xlabel('Time (s)')
+        self.h.set_ylabel('Displacement (m)')
+        self.h.plot(self.tData, self.hData, label='Pos', color='r')
+        self.h.plot(self.tData, self.rData, label='Ref', color='r', linestyle='--')
+        self.h.legend(loc='upper right')
+        self.h.grid(True)
 
         self.fig.tight_layout()
 

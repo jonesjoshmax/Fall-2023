@@ -14,6 +14,6 @@ class Controller:
     def update(self, z_r, state):
         z, zDot = state.flatten()
         f_e = k * z
-        f_tilde = self.kp * (z_r - z)  - self.kd * zDot
+        f_tilde = self.kp * (z_r - z) - self.kd * zDot
         f = f_e + f_tilde
         return f
