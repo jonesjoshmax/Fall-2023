@@ -14,7 +14,7 @@ kd = 0.75
 kp = 0.09
 
 # SIM REFS
-h_r = 5
+h_r = 3
 
 # INITIAL VALUES
 z0 = 0.0
@@ -41,6 +41,6 @@ tA = np.arange(t0, tf + ts, ts)
 fMax = 500.0
 
 # PLOTTING VARIABLES
-animLim = 7.5
-cSize = 0.50
-dSize = 0.25
+animLim = 10
+cSize = 0.25
+dSize = cSize / 3

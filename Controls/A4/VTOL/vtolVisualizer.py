@@ -17,7 +17,9 @@ class Visualizer:
         # FIGURE INITIALIZATION
         self.fig = plt.figure()
         self.anim = self.fig.add_subplot(1, 2, 1)
-        self.rect = None
+        self.body = None
+        self.prop_1 = None
+        self.prop_2 = None
         self.f = self.fig.add_subplot(2, 2, 2)
         self.h = self.fig.add_subplot(2, 2, 4)
 
@@ -41,19 +43,27 @@ class Visualizer:
 
         self.fig.tight_layout()
 
+        # plt.pause(20)
+
     def update(self, state, f, r):
         self.tData = np.append(self.tData, self.tData[-1] + ts)
         self.fData = np.append(self.fData, f)
         self.hData = np.append(self.hData, state[1, 0])
         self.rData = np.append(self.rData, r)
+        h = state[1, 0]
 
         # ANIMATION PLOT
         self.anim.cla()
-        self.anim.axhline(y=0, color='black', linewidth=1, zorder=3)
-        self.rect = patches.Rectangle((0 - cSize / 2, state[1, 0]), cSize, cSize, facecolor='r', zorder=2)
-        self.anim.add_patch(self.rect)
+        self.anim.axhline(y=0, color='black', linewidth=1, zorder=0)
+        self.anim.plot([-d, d], [h, h], color='black', linewidth=1, zorder=1)
+        self.body = patches.Rectangle((0 - cSize / 2, h - cSize / 2), cSize, cSize, facecolor='r', zorder=2)
+        self.prop_1 = patches.Rectangle((-d - dSize / 2, h - dSize / 2), dSize, dSize, facecolor='r', zorder=3)
+        self.prop_2 = patches.Rectangle((d - dSize / 2, h - dSize / 2), dSize, dSize, facecolor='r', zorder=4)
+        self.anim.add_patch(self.body)
+        self.anim.add_patch(self.prop_1)
+        self.anim.add_patch(self.prop_2)
         self.anim.set_xlim(-animLim / 2, animLim / 2)
-        self.anim.set_ylim(0, animLim)
+        self.anim.set_ylim(-1, animLim-1)
 
         # FORCE SUBPLOT
         self.f.cla()

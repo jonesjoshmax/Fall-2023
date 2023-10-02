@@ -39,6 +39,8 @@ class Visualizer:
 
         self.fig.tight_layout()
 
+        plt.pause(20)
+
     def update(self, state, f, r):
         self.tData = np.append(self.tData, self.tData[-1] + ts)
         self.fData = np.append(self.fData, f)
