@@ -71,7 +71,7 @@ while t < t1:
 
     # ROTATING STL TO BE CORRECT ORIENTATION
     if t == t0:
-        verts = np.matmul(verts, rot(0, 0, -np.pi / 2))
+        verts = np.matmul(verts, rot(0, 0, np.pi / 2))
 
     r = rot(ph, th, ps)
     rVerts = np.matmul(r, verts.T).T

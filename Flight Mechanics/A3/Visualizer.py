@@ -140,8 +140,6 @@ class Visualizer:
         self.pqr.legend(loc='upper right')
         self.pqr.grid(True)
 
-        plt.pause(10)
-
     def update(self, verts, data, f, lmn, defLData):
         self.verts = verts
         self.t += 1

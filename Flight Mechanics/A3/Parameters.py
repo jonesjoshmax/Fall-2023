@@ -2,7 +2,7 @@ from numpy import zeros
 from numpy import arange
 
 # MODEL SETTING
-model = 'f22.stl'
+model = 'simple.stl'
 
 # GRAPHING SETTINGS
 g_lim = 5
