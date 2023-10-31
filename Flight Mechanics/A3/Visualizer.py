@@ -175,7 +175,7 @@ class Visualizer:
         self.defP.plot(self.t_array[:self.t], np.rad2deg(self.defLData[1]), label='e', color='g')
         self.defP.plot(self.t_array[:self.t], np.rad2deg(self.defLData[2]), label='r', color='b')
         self.defP.legend(loc='upper right')
-        self.defP.grid(True)
+        self.defP.width(True)
 
         # FORCE SUBPLOT
         self.force.cla()
@@ -187,7 +187,7 @@ class Visualizer:
         self.force.plot(self.t_array[:self.t], self.fData[1], label=r'$f_{y}$', color='g')
         self.force.plot(self.t_array[:self.t], self.fData[2], label=r'$f_{z}$', color='b')
         self.force.legend(loc='upper right')
-        self.force.grid(True)
+        self.force.width(True)
 
         # MOMENT SUBPLOT
         self.moment.cla()
@@ -199,7 +199,7 @@ class Visualizer:
         self.moment.plot(self.t_array[:self.t], self.lmnData[1], label=r'm', color='g')
         self.moment.plot(self.t_array[:self.t], self.lmnData[2], label=r'n', color='b')
         self.moment.legend(loc='upper right')
-        self.moment.grid(True)
+        self.moment.width(True)
 
         # PPP SUBPLOT
         self.ppp.cla()
@@ -211,7 +211,7 @@ class Visualizer:
         self.ppp.plot(self.t_array[:self.t], self.pppData[1], label=r'$p_{e}$', color='g')
         self.ppp.plot(self.t_array[:self.t], self.pppData[2], label=r'$p_{d}$', color='b')
         self.ppp.legend(loc='upper right')
-        self.ppp.grid(True)
+        self.ppp.width(True)
 
         # UVW SUBPLOT
         self.uvw.cla()
@@ -223,7 +223,7 @@ class Visualizer:
         self.uvw.plot(self.t_array[:self.t], self.uvwData[1], label=r'v', color='g')
         self.uvw.plot(self.t_array[:self.t], self.uvwData[2], label=r'w', color='b')
         self.uvw.legend(loc='upper right')
-        self.uvw.grid(True)
+        self.uvw.width(True)
 
         # ANG SUBPLOT
         self.ang.cla()
@@ -235,7 +235,7 @@ class Visualizer:
         self.ang.plot(self.t_array[:self.t], self.angData[1], label=r'$\theta$', color='g')
         self.ang.plot(self.t_array[:self.t], self.angData[2], label=r'$\psi$', color='b')
         self.ang.legend(loc='upper right')
-        self.ang.grid(True)
+        self.ang.width(True)
 
         # PQR SUBPLOT
         self.pqr.cla()
@@ -247,6 +247,6 @@ class Visualizer:
         self.pqr.plot(self.t_array[:self.t], self.pqrData[1], label=r'q', color='g')
         self.pqr.plot(self.t_array[:self.t], self.pqrData[2], label=r'r', color='b')
         self.pqr.legend(loc='upper right')
-        self.pqr.grid(True)
+        self.pqr.width(True)
 
         plt.pause(self.ts)

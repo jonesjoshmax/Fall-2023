@@ -66,10 +66,10 @@ class Visualizer:
         self.ground.set_data([-10, 10], [-.1, -.1])  # Update new horizontal line position
         self.ax1.relim()
         self.ax1.autoscale_view()
-        self.ax1.grid(1)
+        self.ax1.width(1)
         self.ax3.relim()
         self.ax3.autoscale_view()
-        self.ax3.grid(1)
+        self.ax3.width(1)
         plt.pause(0.0001)
         self.ax2.set_yticklabels([])
 
