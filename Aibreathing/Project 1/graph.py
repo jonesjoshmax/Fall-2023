@@ -6,7 +6,7 @@ matplotlib.use('TkAgg')
 class graph:
     def __init__(self, parameter):
         # FIGURE INITIALIZATION
-        self.fig = plt.figure()
+        self.fig = plt.figure(figsize=(16, 10))
         self.fm = self.fig.add_subplot(2, 2, 1)
         self.tsfc = self.fig.add_subplot(2, 2, 2)
         self.f = self.fig.add_subplot(2, 2, 3)
@@ -36,7 +36,7 @@ class graph:
         self.n.set_ylabel(r'%')
         self.n.grid()
 
-    def plot(self, data, step):
+    def plot(self, data, step, cycle, param):
         fm = data[0]
         tsfc = data[1]
         f = data[2]
@@ -64,4 +64,5 @@ class graph:
         self.n.legend()
 
         # SHOW PLOT
+        self.fig.savefig(cycle + param, dpi='figure', format=None)
         self.fig.show()

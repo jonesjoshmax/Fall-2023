@@ -18,18 +18,18 @@ for i in range(bprArray.size):
     cycle = c.Ideal(bprIn=bprArray[i])
     # cycle = c.Real(bprIn=bprArray[i])
     bprData[:, i] = cycle.calc()
-gBPR.plot(bprData, bprArray)
+gBPR.plot(bprData, bprArray, 'Ideal', 'BPR')
 
 fprData = np.zeros([6, fprArray.size])
 for i in range(fprArray.size):
     cycle = c.Ideal(fprIn=fprArray[i])
     # cycle = c.Real(fprIn=fprArray[i])
     fprData[:, i] = cycle.calc()
-gFPR.plot(fprData, fprArray)
+gFPR.plot(fprData, cprArray, 'Ideal', 'FPR')
 
 cprData = np.zeros([6, cprArray.size])
 for i in range(cprArray.size):
     cycle = c.Ideal(cprIn=cprArray[i])
     # cycle = c.Real(cprIn=cprArray[i])
     cprData[:, i] = cycle.calc()
-gCPR.plot(cprData, cprArray)
+gCPR.plot(cprData, cprArray, 'Ideal', 'CPR')
