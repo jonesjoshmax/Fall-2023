@@ -3,9 +3,9 @@ import cycles as c
 from graph import graph as g
 from params import *
 
-# gBPR = g('BPR')
+gBPR = g('BPR')
 gFPR = g('FPR')
-# gCPR = g('CPR')
+gCPR = g('CPR')
 
 
 n = 1000
