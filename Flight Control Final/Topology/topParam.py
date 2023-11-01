@@ -9,7 +9,7 @@ dSize = width * resolution
 dXY = np.linspace(-width / 2, width / 2, dSize)
 dZ = np.linspace(0, height, dSize)
 n = dXY.size
-c = 20
+c = 10
 
 x, y = np.meshgrid(dXY, dXY)
 

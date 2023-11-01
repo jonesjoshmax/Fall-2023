@@ -3,9 +3,9 @@ import cycles as c
 from graph import graph as g
 from params import *
 
-gBPR = g('BPR')
+# gBPR = g('BPR')
 gFPR = g('FPR')
-gCPR = g('CPR')
+# gCPR = g('CPR')
 
 
 n = 1000
@@ -22,10 +22,10 @@ gBPR.plot(bprData, bprArray, 'Ideal', 'BPR')
 
 fprData = np.zeros([6, fprArray.size])
 for i in range(fprArray.size):
-    cycle = c.Ideal(fprIn=fprArray[i])
-    # cycle = c.Real(fprIn=fprArray[i])
+    # cycle = c.Ideal(fprIn=fprArray[i])
+    cycle = c.Real(fprIn=fprArray[i])
     fprData[:, i] = cycle.calc()
-gFPR.plot(fprData, cprArray, 'Ideal', 'FPR')
+gFPR.plot(fprData, fprArray, 'Real', 'FPR')
 
 cprData = np.zeros([6, cprArray.size])
 for i in range(cprArray.size):
