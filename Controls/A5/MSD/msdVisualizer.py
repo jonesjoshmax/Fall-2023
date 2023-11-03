@@ -14,10 +14,11 @@ class Visualizer:
         self.f = self.fig.add_subplot(2, 2, 2)
         self.z = self.fig.add_subplot(2, 2, 4)
 
-        self.tData = np.array([t0])
-        self.fData = np.array([0])
-        self.zData = np.array(state0[0, 0])
-        self.rData = np.array([z_r])
+        self.tData = np.array([])
+        self.fData = np.array([])
+        self.zData = np.array([])
+        self.rData = np.array([])
+        self.flag = False
 
         # ANIMATION SUBPLOT SETUP
         self.anim.set_title('Mass Spring Damper')
@@ -38,12 +39,21 @@ class Visualizer:
         self.z.grid(True)
 
         self.fig.tight_layout()
+        plt.pause(pause)
 
-    def update(self, state, f, r):
-        self.tData = np.append(self.tData, self.tData[-1] + ts)
-        self.fData = np.append(self.fData, f)
-        self.zData = np.append(self.zData, state[0, 0])
-        self.rData = np.append(self.rData, r)
+    def update(self, state, f, r, t):
+        if not self.flag:
+            self.tData = np.array([t])
+            self.fData = np.array([f])
+            self.zData = np.array([state[0, 0]])
+            self.rData = np.array([r])
+            self.flag = True
+
+        else:
+            self.tData = np.append(self.tData, t)
+            self.fData = np.append(self.fData, f)
+            self.zData = np.append(self.zData, state[0, 0])
+            self.rData = np.append(self.rData, r)
 
         # ANIMATION PLOT
         self.anim.cla()
@@ -51,7 +61,7 @@ class Visualizer:
         self.anim.plot([0, state[0, 0]], [0, 0], color='black', linestyle='--', zorder=1)
         self.rect = patches.Rectangle((state[0, 0] - sq / 2, -sq / 2), sq, sq, facecolor='r', zorder=2)
         self.anim.add_patch(self.rect)
-        self.anim.set_xlim(0, 15)
+        self.anim.set_xlim(-1, 14)
         self.anim.set_ylim(-7.5, 7.5)
 
         # FORCE SUBPLOT

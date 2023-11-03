@@ -7,14 +7,18 @@ from vtolParameters import *
 dyn = Dynamics()
 con = Controller()
 vis = Visualizer()
-ref = signalGenerator(amplitude=h_r, frequency=.015, y_offset=h_r)
+z_ref = signalGenerator(amplitude=2.5, frequency=.08)
+h_ref = signalGenerator(amplitude=2.5, frequency=.04, y_offset=2.5)
 
 t = t0
-state = dyn.state
-
 while t < tf:
-    r = ref.square(t)
-    f = con.update(r, state)
-    state = dyn.update(f)
-    vis.update(state, f, r)
+    z_r = z_ref.square(t)
+    h_r = h_ref.square(t)
+    fr, fl = con.update2(z_r, h_r, dyn.state)
+    state = dyn.update(fr, fl)
+    if temp % plot == 0 or temp == 0:
+        f = np.array([[fr], [fl]])
+        r = np.array([[z_r], [h_r]])
+        vis.update(state, f, r, t)
     t += ts
+    temp += 1
