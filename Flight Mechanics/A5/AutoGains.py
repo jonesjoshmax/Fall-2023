@@ -35,21 +35,21 @@ aV3 = g * np.cos(thT - aT)
 z = 0.707
 
 # ROLL
-trRoll = 1
+trRoll = 2
 wRoll = 2.2 / trRoll
 kdRoll = (2 * z * wRoll - aPh1) / aPh2
 kpRoll = wRoll ** 2 / aPh1
 kiRoll = 0
 
 # COURSE
-trCourse = 2.2
+trCourse = 1
 wCourse = 2.2 / trCourse
 zCourse = 0.5
 kdCourse = 0
 kpCourse = (2 * zCourse * wCourse * VaT) / g
 kiCourse = (wCourse ** 2 * VaT) / g
 
-# PITCHD
+# PITCH
 zPitch = 0.1
 trPitch = 0.1
 wPitch = 2.2 / trPitch
@@ -59,7 +59,7 @@ kiPitch = 0
 kDCth = kpPitch * aTh3 / (aTh2 + kpPitch * aTh3)
 
 # ALTITUDE
-trAlt = 1.0
+trAlt = 10.0
 wAlt = 2.2 / trAlt
 kdAlt = 0
 kpAlt = 2 * z * wAlt / (kDCth * VaT)
@@ -73,7 +73,7 @@ kpVa = (aV1 - 2 * z * wVa) / kDCth
 kiVa = wVa ** 2 / (kDCth * g)
 
 # THROTTLE
-trThr = 0.1
+trThr = 0.01
 wThr = 2.2 / trThr
 kdThr = 0
 kpThr = (2 * z * wThr - aV1) / aV2

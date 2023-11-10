@@ -10,13 +10,13 @@ g_lim = 5
 scale = 0.05
 
 # TIME SETTINGS
-plt = 500
+plt = 100
 temp = plt
 t0 = 0
 t1 = 300
-ts = 0.01
+ts = 0.001
 t_array = arange(t0, t1 + ts, plt * ts)
-pause = 0.01
+pause = 25
 
 # INERTIAL PARAMETERS
 jx = 0.824

@@ -39,12 +39,12 @@ while t < t1:
         chi_r = np.deg2rad(0)
     elif 100 < t <= 200:
         Va_r = 45
-        h_r = 250
-        chi_r = np.deg2rad(0)
+        h_r = 200
+        chi_r = np.deg2rad(30)
     else:
         Va_r = 60
-        h_r = 500
-        chi_r = np.deg2rad(10)
+        h_r = 300
+        chi_r = np.deg2rad(-30)
     Va = np.sqrt(dyn.state[3, 0] ** 2 + dyn.state[4, 0] ** 2 + dyn.state[5, 0] ** 2)
 
     u = np.array([t, dyn.state[6, 0], dyn.state[7, 0], dyn.state[8, 0], dyn.state[9, 0], dyn.state[10, 0],
