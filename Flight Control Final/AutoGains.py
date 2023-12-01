@@ -35,7 +35,7 @@ aV3 = g * np.cos(thT - aT)
 z = 0.707
 
 # ROLL
-trRoll = 2
+trRoll = 2.0
 wRoll = 2.2 / trRoll
 kdRoll = (2 * z * wRoll - aPh1) / aPh2
 kpRoll = wRoll ** 2 / aPh1
@@ -51,7 +51,7 @@ kiCourse = (wCourse ** 2 * VaT) / g
 
 # PITCH
 zPitch = 0.1
-trPitch = 0.0001
+trPitch = 0.1
 wPitch = 2.2 / trPitch
 kdPitch = (2 * zPitch * wPitch - aTh1) / aTh3
 kpPitch = (wPitch ** 2 - aTh2) / aTh3
@@ -73,7 +73,7 @@ kpVa = (aV1 - 2 * z * wVa) / kDCth
 kiVa = wVa ** 2 / (kDCth * g)
 
 # THROTTLE
-trThr = 0.01
+trThr = 0.1
 wThr = 2.2 / trThr
 kdThr = 0
 kpThr = (2 * z * wThr - aV1) / aV2

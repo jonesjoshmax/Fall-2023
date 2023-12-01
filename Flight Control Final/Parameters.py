@@ -1,16 +1,22 @@
 from numpy import zeros
 from numpy import arange
-from numpy import array
 
 # MODEL SETTING
 model = 'f22.stl'
 
+# COLORS
+c1 = '#2F00EA'
+c2 = '#C507E6'
+c3 = '#7C07E6'
+c4 = '#4055E6'
+c5 = '#E645B0'
+
 # GRAPHING SETTINGS
-g_lim = 5
-scale = 0.05
+g_lim = 100
+scale = 0.2
 
 # TIME SETTINGS
-plt = 500
+plt = 250
 temp = plt
 t0 = 0
 t1 = 300
